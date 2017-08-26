@@ -1,4 +1,0 @@
-#N canvas 753 288 450 300 10;
-#X obj 96 28 dumpOSC 9000;
-#X obj 102 97 print;
-#X connect 0 0 1 0;
