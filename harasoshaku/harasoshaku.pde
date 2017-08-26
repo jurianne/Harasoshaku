@@ -1,13 +1,6 @@
 import netP5.*;
 import oscP5.*;
 
-import ddf.minim.*;
-import ddf.minim.analysis.*;
-import ddf.minim.effects.*;
-import ddf.minim.signals.*;
-import ddf.minim.spi.*;
-import ddf.minim.ugens.*;
-
 import cc.arduino.*;
 import org.firmata.*;
 import processing.serial.*;
@@ -17,10 +10,9 @@ OscP5 osc;
 NetAddress myRemoteLocation;
 
 float x, y, z;
-int AIN1 = 13;
-int AIN2 = 12;
-int PWMA = 11;
-boolean state = false;
+final int AIN1 = 13;
+final int AIN2 = 12;
+final int PWMA = 11;
 
 void setup()
 {
