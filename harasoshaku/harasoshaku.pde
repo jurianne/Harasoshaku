@@ -40,6 +40,7 @@ void draw() {
   delay(50);
   
    if (z < 400 && state == false) {
+      playSound();
       arduino.digitalWrite(AIN1, Arduino.HIGH);
       arduino.digitalWrite(AIN2, Arduino.LOW);
       arduino.analogWrite(PWMA, 255);
@@ -56,6 +57,13 @@ void draw() {
       arduino.digitalWrite(AIN2, Arduino.LOW);
       state = false;
     }
+}
+
+void playSound()
+{
+  OscMessage myMessage = new OscMessage("/test");
+  myMessage.add("hello pd");
+  osc.send(myMessage,myRemoteLocation);
 }
 
 void keyPressed()
