@@ -1,4 +1,4 @@
-#N canvas 900 268 450 300 10;
+#N canvas 8 35 778 602 10;
 #X obj 61 90 dumpOSC 9000;
 #X obj 168 50 print;
 #N canvas 0 22 450 278 (subpatch) 0;
@@ -6,19 +6,35 @@
 #X coords 0 1 24192 -1 200 140 1 0 0;
 #X restore 214 74 graph;
 #X msg 168 12 hello;
-#X obj 13 267 soundfiler;
-#X msg 27 225 read -resize data/sosyaku.wav sosyaku;
-#X obj 32 118 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 494 297 soundfiler;
+#X obj 60 119 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 30 200 dac~;
+#X obj 139 430 dac~;
 #X obj 334 217 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X msg 335 245 \; pd dsp \$1;
-#X obj 63 149 tabplay~ sosyaku;
-#X connect 0 0 6 0;
+#X obj 60 276 tabplay~ sosyaku;
+#X obj 65 158 random 2;
+#X obj 65 190 sel 0;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array sosyaku2 65664 float 2;
+#X coords 0 1 65664 -1 200 140 1 0 0;
+#X restore 455 71 graph;
+#X msg 494 261 read -resize data/sosyaku.wav sosyaku;
+#X obj 246 334 soundfiler;
+#X obj 172 277 tabplay~ sosyaku2;
+#X text 104 451 dacの左右は出力のLRです;
+#X msg 246 304 read -resize data/motion.wav sosyaku2;
+#X connect 0 0 5 0;
 #X connect 3 0 1 0;
-#X connect 5 0 4 0;
-#X connect 6 0 10 0;
-#X connect 8 0 9 0;
-#X connect 10 0 7 0;
-#X connect 10 0 7 1;
+#X connect 5 0 10 0;
+#X connect 7 0 8 0;
+#X connect 9 0 6 1;
+#X connect 9 0 6 0;
+#X connect 10 0 11 0;
+#X connect 11 0 9 0;
+#X connect 11 1 15 0;
+#X connect 13 0 4 0;
+#X connect 15 0 6 1;
+#X connect 15 0 6 0;
+#X connect 17 0 14 0;
