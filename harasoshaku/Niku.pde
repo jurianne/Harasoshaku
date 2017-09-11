@@ -1,11 +1,11 @@
-class Senbei extends Tabemono
+class Niku extends Tabemono
 {
-  private final String SOUND_SENBEI_FIRST = "/sfirst";
-  private final String SOUND_SENBEI_OTHER = "/sother";
+  private final String SOUND_NIKU_FIRST = "/nfirst";
+  private final String SOUND_NIKU_OTHER = "/nother";
   
   private int count = 0;
   
-  Senbei(Arduino ard, OscP5 osc,NetAddress netAddress)
+  Niku(Arduino ard, OscP5 osc,NetAddress netAddress)
   {
     super(ard,osc,netAddress);
     
@@ -31,7 +31,7 @@ class Senbei extends Tabemono
   }
   private void first()
   {
-    playSounds(SOUND_SENBEI_FIRST);
+    playSounds(SOUND_NIKU_FIRST);
     forward(255,200);
     off(100); 
     forward(255,200);
@@ -48,7 +48,7 @@ class Senbei extends Tabemono
   
   private void other()
   {
-    playSounds(SOUND_SENBEI_OTHER);
+    playSounds(SOUND_NIKU_OTHER);
     forward(255,800);
     back(255,500);
   }

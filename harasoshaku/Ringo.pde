@@ -1,11 +1,11 @@
-class Senbei extends Tabemono
+class Ringo extends Tabemono
 {
-  private final String SOUND_SENBEI_FIRST = "/sfirst";
-  private final String SOUND_SENBEI_OTHER = "/sother";
+  private final String SOUND_RINGO_FIRST = "/rfirst";
+  private final String SOUND_RINGO_OTHER = "/rother";
   
   private int count = 0;
   
-  Senbei(Arduino ard, OscP5 osc,NetAddress netAddress)
+  Ringo(Arduino ard, OscP5 osc,NetAddress netAddress)
   {
     super(ard,osc,netAddress);
     
@@ -31,7 +31,7 @@ class Senbei extends Tabemono
   }
   private void first()
   {
-    playSounds(SOUND_SENBEI_FIRST);
+    playSounds(SOUND_RINGO_FIRST);
     forward(255,200);
     off(100); 
     forward(255,200);
@@ -48,7 +48,7 @@ class Senbei extends Tabemono
   
   private void other()
   {
-    playSounds(SOUND_SENBEI_OTHER);
+    playSounds(SOUND_RINGO_OTHER);
     forward(255,800);
     back(255,500);
   }
