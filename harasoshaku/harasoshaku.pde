@@ -7,8 +7,7 @@ import processing.serial.*;
 
 final static int NON = 0;
 final static int SENBEI = 1;
-final static int RINGO = 2;
-final static int NIKU = 3;
+final static int NIKU = 2;
 
 //shikiichi
 final int SENSOR_VALUE_NORMAL = 415;
@@ -18,7 +17,6 @@ final int SENSOR_VALUE_FORWARD_MAX = 560;
 final int SENSOR_VALUE_ISEATING = 870;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
-final int SENSOR_VALUE_RINGO = 950;
 
 //Arduino1
 final int EATSENSOR = 1;
@@ -31,13 +29,11 @@ final static int PWMA = 9;
 
 //Arduino2
 final int SENBEI_SENSOR = 0;
-final int RINGO_SENSOR = 2;
 final int NIKU_SENSOR = 1;
 
 int TABEMONO = 0;
 
 Senbei senbei;
-Ringo ringo;
 Niku niku;
 
 Arduino arduino;
@@ -47,7 +43,7 @@ NetAddress myRemoteLocation;
 
 float x, y, z;
 float volume;
-int senbeiVal, ringoVal, nikuVal;
+int senbeiVal, nikuVal;
 boolean isEating = false;
 
 void setup()
@@ -61,7 +57,6 @@ void setup()
   myRemoteLocation = new NetAddress("127.0.0.1", 9800);
 
   senbei = new Senbei(arduino, osc, myRemoteLocation);
-  ringo = new Ringo(arduino, osc, myRemoteLocation);
   niku = new Niku(arduino, osc, myRemoteLocation);
 }
 
@@ -94,11 +89,9 @@ boolean isEating()
 int whichTabemono()//akarusa sensing
 {
   senbeiVal = arduino2.analogRead(SENBEI_SENSOR);
-  ringoVal = arduino2.analogRead(RINGO_SENSOR);
   nikuVal = arduino2.analogRead(NIKU_SENSOR);
 
   if (SENSOR_VALUE_SENBEI - senbeiVal >= 80) return SENBEI;
-  else if (SENSOR_VALUE_RINGO - ringoVal >= 80) return RINGO;
   else if (SENSOR_VALUE_NIKU - nikuVal >= 80) return NIKU;
   return NON;
 }
@@ -110,16 +103,11 @@ void sosyaku(float volume)
   {
   case NON:
     senbei.init();
-    ringo.init();
     niku.init();
     break;
   case SENBEI:
     senbei.sosyaku(volume);
     background(255, 0, 0);
-    break;
-  case RINGO:
-    ringo.sosyaku(volume);
-    background(0, 255, 0);
     break;
   case NIKU:
     niku.sosyaku(volume);
@@ -143,10 +131,6 @@ void keyPressed()
   {
     TABEMONO = SENBEI;
     background(255, 0, 0);
-  } else if (key == 'r')
-  {
-    TABEMONO = RINGO;
-    background(0, 255, 0);
   } else if (key == 'n')
   {
     TABEMONO = NIKU;
