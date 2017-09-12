@@ -12,6 +12,7 @@ final static int NIKU = 3;
 
 //shikiichi
 final int SENSOR_VALUE_NORMAL = 415;
+final int SENSOR_VALUE_BACK = 370;
 final int SENSOR_VALUE_FORWARD = 470;
 final int SENSOR_VALUE_FORWARD_MAX = 560;
 final int SENSOR_VALUE_ISEATING = 870;
@@ -77,6 +78,7 @@ void draw()
     { 
       volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
       sosyaku(volume);
+    } else {
     }
   } else {
     isEating = false;
@@ -127,6 +129,12 @@ void sosyaku(float volume)
     println("[sosyaku]error");
     break;
   }
+}
+
+void gokuri()
+{
+  OscMessage myMessage = new OscMessage("/gokuri");
+  osc.send(myMessage, myRemoteLocation);
 }
 
 void keyPressed()
