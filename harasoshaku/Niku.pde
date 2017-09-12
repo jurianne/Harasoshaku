@@ -10,14 +10,15 @@ class Niku extends Tabemono
   public void init()
   {
   }
-  public void sosyaku(float power)
+  public void sosyaku(float volume)
   {
-    other(power);
+    other(volume);
   }
-  private void other(float power)
+  private void other(float volume)
   {
-    playSounds(SOUND_NIKU_OTHER,power);
+    playSounds(SOUND_NIKU_OTHER,volume);
     forward(255,800);
     back(255,500);
+    off(10);
   }
 }

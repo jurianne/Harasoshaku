@@ -14,9 +14,9 @@ final static int AIN1 = 11;
 final static int AIN2 = 10;
 final static int PWMA = 9;
 
-final int SENSOR_VALUE_NORMAL = 660;
-final int SENSOR_VALUE_FORWARD = 620;
-final int SENSOR_VALUE_FORWARD_MAX = 560;
+final int SENSOR_VALUE_NORMAL = 450;
+final int SENSOR_VALUE_FORWARD = 560;
+final int SENSOR_VALUE_FORWARD_MAX = 680;
 
 final int TABEMONOSENSOR = 0;
 final int X = 3;
@@ -39,7 +39,8 @@ OscP5 osc;
 NetAddress myRemoteLocation;
 
 float x, y, z;
-float power;
+float volume;
+boolean isEating = false;
 
 void setup()
 {
@@ -63,14 +64,18 @@ void draw()
     x = arduino.analogRead(X);
     y = arduino.analogRead(Y);
     z = arduino.analogRead(Z);
-    println("x=" + x, "y="+ y, "z="+ z);
+    
 
     whichTabemono();
-    if (z < SENSOR_VALUE_FORWARD)
+    if (x > SENSOR_VALUE_FORWARD)
     { 
-      power = SENSOR_VALUE_FORWARD_MAX < z ? 1 : (SENSOR_VALUE_FORWARD_MAX - z) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
-      sosyaku(power);
+      isEating = true;
+      volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
+      sosyaku(volume);
+    }else{
+      isEating = false;
     }
+    println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume + isEating);
   }
 }
 
@@ -81,11 +86,10 @@ boolean isEating()
 
 int whichTabemono()//akarusa sensing
 {
-
   return NON;
 }
 
-void sosyaku(float power)
+void sosyaku(float volume)
 {
   //switch(whichTabemono())
   switch(TABEMONO)
@@ -96,13 +100,13 @@ void sosyaku(float power)
     niku.init();
     break;
   case SENBEI:
-    senbei.sosyaku(power);
+    senbei.sosyaku(volume);
     break;
   case RINGO:
-    ringo.sosyaku(power);
+    ringo.sosyaku(volume);
     break;
   case NIKU:
-    niku.sosyaku(power);
+    niku.sosyaku(volume);
     break;
   default:
     println("[sosyaku]error");
@@ -112,11 +116,19 @@ void sosyaku(float power)
 
 void keyPressed()
 {
-  if (key == 'a')
+  if (key == 's')
   {
     TABEMONO = SENBEI;
     background(255, 0, 0);
-  } else {
+  } else if (key == 'r')
+  {
+    TABEMONO = RINGO;
+    background(0, 255, 0);
+  } else if (key == 'n')
+  {
+    TABEMONO = NIKU;
+    background(0, 0, 255);
+  }else{
     TABEMONO = NON;
     background(0, 0, 0);
   }
