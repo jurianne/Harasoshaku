@@ -37,9 +37,10 @@ class Tabemono
     delay(delay);
   }
 
-  protected void playSounds(String sound)
+  protected void playSounds(String sound,float power)
   {
     OscMessage myMessage = new OscMessage(sound);
+    myMessage.add(power);
     osc.send(myMessage, myRemoteLocation);
   }
 }

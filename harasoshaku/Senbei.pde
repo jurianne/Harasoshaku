@@ -16,22 +16,24 @@ class Senbei extends Tabemono
   {
     count = 0;
   }
-  public void sosyaku()
+  
+  public void sosyaku(float power)
   {
     switch(count)
     {
     case 0:
-      first();
+      first(power);
       count++;
       break;
     default:
-      other();
+      other(power);
       break;
     }
   }
-  private void first()
+  
+  private void first(float power)
   {
-    playSounds(SOUND_SENBEI_FIRST);
+    playSounds(SOUND_SENBEI_FIRST,power);
     forward(255,200);
     off(100); 
     forward(255,200);
@@ -46,9 +48,9 @@ class Senbei extends Tabemono
     off(50);
   }
   
-  private void other()
+  private void other(float power)
   {
-    playSounds(SOUND_SENBEI_OTHER);
+    playSounds(SOUND_SENBEI_OTHER,power);
     forward(255,800);
     back(255,500);
   }
