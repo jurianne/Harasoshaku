@@ -10,16 +10,17 @@ final static int SENBEI = 1;
 final static int RINGO = 2;
 final static int NIKU = 3;
 
-final int SENSOR_VALUE_NORMAL = 450;
-final int SENSOR_VALUE_FORWARD = 560;
-final int SENSOR_VALUE_FORWARD_MAX = 680;
-final int SENSOR_VALUE_ISEATING = 1000;
+//shikiichi
+final int SENSOR_VALUE_NORMAL = 415;
+final int SENSOR_VALUE_FORWARD = 470;
+final int SENSOR_VALUE_FORWARD_MAX = 560;
+final int SENSOR_VALUE_ISEATING = 870;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
 final int SENSOR_VALUE_RINGO = 950;
 
 //Arduino1
-final int EATSENSOR = 0;
+final int EATSENSOR = 1;
 final int X = 3;
 final int Y = 4;
 final int Z = 5;
@@ -45,7 +46,7 @@ NetAddress myRemoteLocation;
 
 float x, y, z;
 float volume;
-int senbeiVal,ringoVal,nikuVal;
+int senbeiVal, ringoVal, nikuVal;
 boolean isEating = false;
 
 void setup()
@@ -54,7 +55,7 @@ void setup()
 
   arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
   //arduino2 for sensor
-  //arduino2 = new Arduino(this,"");
+  arduino2 = new Arduino(this, "/dev/cu.usbmodem1411");
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9800);
 
@@ -67,6 +68,7 @@ void draw()
 {
   if (isEating())
   {
+    isEating = true;
     x = arduino.analogRead(X);
     y = arduino.analogRead(Y);
     z = arduino.analogRead(Z);
@@ -76,13 +78,15 @@ void draw()
       volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
       sosyaku(volume);
     }
-    println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume);
+  } else {
+    isEating = false;
   }
+  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR));
 }
 
 boolean isEating()
 {
-  return arduino2.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING;
+  return arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING;
 }
 
 int whichTabemono()//akarusa sensing
@@ -90,17 +94,17 @@ int whichTabemono()//akarusa sensing
   senbeiVal = arduino2.analogRead(SENBEI_SENSOR);
   ringoVal = arduino2.analogRead(RINGO_SENSOR);
   nikuVal = arduino2.analogRead(NIKU_SENSOR);
-  
-  if(SENSOR_VALUE_SENBEI - senbeiVal >= 80) return SENBEI;
-  else if(SENSOR_VALUE_RINGO - ringoVal >= 80) return RINGO;
-  else if(SENSOR_VALUE_NIKU - nikuVal >= 80) return NIKU;
+
+  if (SENSOR_VALUE_SENBEI - senbeiVal >= 80) return SENBEI;
+  else if (SENSOR_VALUE_RINGO - ringoVal >= 80) return RINGO;
+  else if (SENSOR_VALUE_NIKU - nikuVal >= 80) return NIKU;
   return NON;
 }
 
 void sosyaku(float volume)
 {
-  //switch(whichTabemono())
-  switch(TABEMONO)
+  switch(whichTabemono())
+  //switch(TABEMONO)
   {
   case NON:
     senbei.init();
@@ -109,12 +113,15 @@ void sosyaku(float volume)
     break;
   case SENBEI:
     senbei.sosyaku(volume);
+    background(255, 0, 0);
     break;
   case RINGO:
     ringo.sosyaku(volume);
+    background(0, 255, 0);
     break;
   case NIKU:
     niku.sosyaku(volume);
+    background(0, 0, 255);
     break;
   default:
     println("[sosyaku]error");
