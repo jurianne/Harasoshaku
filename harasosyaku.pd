@@ -1,5 +1,5 @@
-#N canvas 99 177 967 610 10;
-#N canvas 323 540 598 423 init 1;
+#N canvas 589 192 967 610 10;
+#N canvas 323 291 598 423 init 0;
 #X obj 97 36 inlet;
 #X msg 97 71 read -resize data/senbei/senbei_1.wav sfirst;
 #X obj 49 391 soundfiler;
@@ -103,7 +103,7 @@
 #X coords 0 1 7336 -1 200 140 1 0 0;
 #X restore 261 262 graph;
 #X restore 220 413 pd sounds_ringo;
-#N canvas 160 550 506 495 sounds_niku 1;
+#N canvas 130 340 506 495 sounds_niku 1;
 #N canvas 0 22 450 278 (subpatch) 0;
 #X array nother0 85732 float 2;
 #X coords 0 1 85732 -1 200 140 1 0 0;
@@ -129,7 +129,7 @@
 #N canvas 209 315 450 300 play_sounds_random_senbei 0;
 #X obj 121 37 inlet;
 #X restore -12 339 pd play_sounds_random_senbei;
-#N canvas 856 256 560 485 play_sounds_random_ringo 1;
+#N canvas 647 202 560 485 play_sounds_random_ringo 0;
 #X obj 121 37 inlet;
 #X obj 98 111 random 4;
 #X obj 83 187 sel 0;
