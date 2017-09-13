@@ -11,16 +11,16 @@ class Senbei extends Tabemono
   {
   }
   
-  public void sosyaku(float volume)
+  public void sosyaku(float volume, int power)
   {
-    other(volume);
+    other(volume,power);
   }
   
-  private void other(float volume)
+  private void other(float volume,int power)
   {
     playSounds(SOUND_SENBEI_OTHER,volume);
-    forward(255,300);
-    back(255,100);
+    forward(power,300);
+    back(power,100);
     off(10);
   }
 }

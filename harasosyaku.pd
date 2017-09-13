@@ -1,5 +1,5 @@
-#N canvas 438 443 1111 603 10;
-#N canvas 561 266 666 579 init 1;
+#N canvas 273 85 1073 630 10;
+#N canvas 561 266 666 579 init 0;
 #X obj 97 36 inlet;
 #X obj 42 474 soundfiler;
 #X msg 165 263 read -resize data/niku/niku_1.wav nother0;
@@ -35,7 +35,7 @@
 #X restore 509 268 pd init;
 #X obj 509 73 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#N canvas 216 282 633 457 shindo 1;
+#N canvas 216 282 633 457 shindo 0;
 #X obj 67 43 inlet;
 #X msg 226 157 1;
 #X msg 262 157 0;
@@ -80,7 +80,7 @@
 #X coords 0 1 13715 -1 200 140 1 0 0;
 #X restore 255 27 graph;
 #X restore -21 423 pd sounds_senbei;
-#N canvas 893 300 506 495 sounds_niku 1;
+#N canvas 893 300 506 495 sounds_niku 0;
 #N canvas 0 22 450 278 (subpatch) 0;
 #X array nother0 18008 float 2;
 #X coords 0 1 18008 -1 200 140 1 0 0;
@@ -107,7 +107,7 @@
 #X obj 121 37 inlet;
 #X restore -49 390 pd play_sounds_random_senbei;
 #X obj 578 305 * 2;
-#N canvas 790 300 591 431 play_sounds_random_niku 1;
+#N canvas 790 300 591 431 play_sounds_random_niku 0;
 #X obj 83 37 inlet;
 #X obj 83 83 random 5;
 #X obj 42 141 sel 0;
@@ -184,7 +184,7 @@
 #X obj 777 366 *~;
 #X obj 9 303 send~ barabaraout;
 #X obj 611 103 receive~ barabaraout;
-#X obj 327 538 dac~;
+#X obj 323 579 dac~;
 #X msg 136 139 1.5;
 #N canvas 683 388 450 300 sounds_etc 0;
 #N canvas 0 22 450 278 (subpatch) 0;
@@ -201,8 +201,7 @@
 #X obj 439 308 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X msg 442 476 1;
-#X obj 13 54 OSCroute /sother /nother /gokuri /paku;
-#N canvas 783 429 591 431 play_sounds_random_senbei 1;
+#N canvas 759 399 591 431 play_sounds_random_senbei 0;
 #X obj 83 37 inlet;
 #X obj 86 130 sel 0;
 #X obj 250 130 sel 2;
@@ -236,6 +235,9 @@
 #X obj -1 19 dumpOSC 9700;
 #X obj -30 68 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
+#X obj 13 54 OSCroute /sother /nother /gokuri /paku /sakana;
+#X obj 393 537 *~;
+#X msg 440 525 0.5;
 #X connect 1 0 0 0;
 #X connect 1 0 8 0;
 #X connect 3 0 4 0;
@@ -254,7 +256,6 @@
 #X connect 22 0 20 1;
 #X connect 23 0 24 0;
 #X connect 25 0 21 0;
-#X connect 26 0 23 0;
 #X connect 26 0 19 0;
 #X connect 27 0 10 0;
 #X connect 27 0 50 0;
@@ -293,22 +294,26 @@
 #X connect 49 0 20 0;
 #X connect 51 0 28 0;
 #X connect 53 0 10 0;
-#X connect 53 0 50 0;
-#X connect 53 0 50 1;
+#X connect 53 0 61 0;
 #X connect 53 1 11 0;
 #X connect 55 0 53 0;
 #X connect 55 0 56 0;
+#X connect 55 0 62 0;
 #X connect 56 0 54 0;
-#X connect 57 0 60 0;
-#X connect 57 1 26 0;
-#X connect 57 2 27 0;
-#X connect 57 2 51 0;
-#X connect 57 3 53 0;
-#X connect 57 3 56 0;
-#X connect 58 0 48 0;
-#X connect 58 0 10 0;
-#X connect 58 1 11 0;
-#X connect 59 0 29 0;
+#X connect 57 0 48 0;
+#X connect 57 0 10 0;
+#X connect 57 1 11 0;
+#X connect 58 0 29 0;
+#X connect 58 0 60 0;
 #X connect 59 0 57 0;
-#X connect 60 0 58 0;
+#X connect 60 0 59 0;
 #X connect 60 0 25 0;
+#X connect 60 1 26 0;
+#X connect 60 1 23 0;
+#X connect 60 2 27 0;
+#X connect 60 2 51 0;
+#X connect 60 3 53 0;
+#X connect 60 3 56 0;
+#X connect 61 0 50 0;
+#X connect 61 0 50 1;
+#X connect 62 0 61 1;

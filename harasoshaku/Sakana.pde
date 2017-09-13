@@ -1,8 +1,8 @@
-class Niku extends Tabemono
+class Sakana extends Tabemono
 {
-  private final String SOUND_NIKU_OTHER = "/nother";
+  private final String SOUND_SAKANA_OTHER = "/sakana";
   
-  Niku(Arduino ard, OscP5 osc,NetAddress netAddress)
+  Sakana(Arduino ard, OscP5 osc,NetAddress netAddress)
   {
     super(ard,osc,netAddress);
   }
@@ -16,7 +16,7 @@ class Niku extends Tabemono
   }
   private void other(float volume,int power)
   {
-    playSounds(SOUND_NIKU_OTHER,volume);
+    playSounds(SOUND_SAKANA_OTHER,volume);
     forward(power,400);
     back(power,300);
     off(10);

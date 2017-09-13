@@ -11,9 +11,9 @@ final static int NIKU = 2;
 
 //shikiichi
 final int SENSOR_VALUE_NORMAL = 415;
-final int SENSOR_VALUE_BACK = 370;
+final int SENSOR_VALUE_BACK = 320;
 final int SENSOR_VALUE_FORWARD = 470;
-final int SENSOR_VALUE_FORWARD_MAX = 560;
+final int SENSOR_VALUE_FORWARD_MAX = 540;
 final int SENSOR_VALUE_ISEATING = 920;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
@@ -43,6 +43,7 @@ NetAddress myRemoteLocation;
 
 float x, y, z;
 float volume;
+int power;
 int senbeiVal, nikuVal;
 boolean isEating = false;
 boolean isSwallow = false;
@@ -74,7 +75,8 @@ void draw()
     if (x > SENSOR_VALUE_FORWARD)
     { 
       volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
-      sosyaku(volume);
+      power = (int)map(volume,0,1,170,255);
+      sosyaku(volume,power);
       wasSoshaku = true;
     } else if ( x < SENSOR_VALUE_BACK && wasSoshaku) {
       gokuri();
@@ -82,7 +84,7 @@ void draw()
   } else {
     isEating = false;
   }
-  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR), "isSwallow=" + isSwallow);
+  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR), "isSwallow=" + isSwallow, "power=" + power);
 }
 
 boolean isEating()
@@ -113,7 +115,7 @@ int whichTabemono()//akarusa sensing
   return NON;
 }
 
-void sosyaku(float volume)
+void sosyaku(float volume,int power)
 {
   switch(whichTabemono())
     //switch(TABEMONO)
@@ -123,11 +125,11 @@ void sosyaku(float volume)
     niku.init();
     break;
   case SENBEI:
-    senbei.sosyaku(volume);
+    senbei.sosyaku(volume,power);
     background(255, 0, 0);
     break;
   case NIKU:
-    niku.sosyaku(volume);
+    niku.sosyaku(volume,power);
     background(0, 0, 255);
     break;
   default:
@@ -140,18 +142,43 @@ void pakuri()
 {
   OscMessage myMessage = new OscMessage("/paku");
   osc.send(myMessage, myRemoteLocation);
+  forward(255,300);
+  off(10);
 }
 
 void gokuri()
 {
   if (!isSwallow)
   {
+    forward(255,400);
     OscMessage myMessage = new OscMessage("/gokuri");
     osc.send(myMessage, myRemoteLocation);
     isSwallow = true;
+    back(255,400);
+    off(10);
   }
 }
 
+void forward(int power, int delay)
+{
+  arduino.digitalWrite(AIN1, Arduino.HIGH);
+  arduino.digitalWrite(AIN2, Arduino.LOW);
+  arduino.analogWrite(PWMA, power);
+  delay(delay);
+}
+void back(int power, int delay)
+{
+  arduino.digitalWrite(AIN1, Arduino.LOW);
+  arduino.digitalWrite(AIN2, Arduino.HIGH);
+  arduino.analogWrite(PWMA, power);
+  delay(delay);
+}
+void off(int delay)
+{
+  arduino.digitalWrite(AIN1, Arduino.LOW);
+  arduino.digitalWrite(AIN2, Arduino.LOW);
+  delay(delay);
+}
 void keyPressed()
 {
   if (key == 's')
