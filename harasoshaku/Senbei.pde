@@ -21,6 +21,6 @@ class Senbei extends Tabemono
     playSounds(SOUND_SENBEI_OTHER,volume);
     forward(power,300);
     back(power,100);
-    off(10);
+    off(400);
   }
 }

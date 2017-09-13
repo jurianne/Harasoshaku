@@ -74,7 +74,8 @@ void draw()
 
     if (x > SENSOR_VALUE_FORWARD)
     { 
-      volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
+      //volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
+      volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : map(x-SENSOR_VALUE_FORWARD,0,SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD,0.5,1);
       power = (int)map(volume,0,1,170,255);
       sosyaku(volume,power);
       wasSoshaku = true;
