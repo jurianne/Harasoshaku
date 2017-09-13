@@ -10,10 +10,12 @@ class Tabemono
     osc = _osc;
     myRemoteLocation = _netAddress;
   }
+  
   protected void setup(Arduino ard)
   {
     arduino = ard;
   }
+  
   protected void forward(int power, int delay)
   {
     arduino.digitalWrite(AIN1, Arduino.HIGH);

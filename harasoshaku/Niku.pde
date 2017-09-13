@@ -17,8 +17,8 @@ class Niku extends Tabemono
   private void other(float volume)
   {
     playSounds(SOUND_NIKU_OTHER,volume);
-    forward(255,800);
-    back(255,500);
+    forward(255,400);
+    back(255,300);
     off(10);
   }
 }

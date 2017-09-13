@@ -14,7 +14,7 @@ final int SENSOR_VALUE_NORMAL = 415;
 final int SENSOR_VALUE_BACK = 370;
 final int SENSOR_VALUE_FORWARD = 470;
 final int SENSOR_VALUE_FORWARD_MAX = 560;
-final int SENSOR_VALUE_ISEATING = 870;
+final int SENSOR_VALUE_ISEATING = 920;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
 
@@ -45,6 +45,8 @@ float x, y, z;
 float volume;
 int senbeiVal, nikuVal;
 boolean isEating = false;
+boolean isSwallow = false;
+boolean wasSoshaku = false;//soshaku shitaka douka
 
 void setup()
 {
@@ -54,7 +56,7 @@ void setup()
   //arduino2 for sensor
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1411");
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9800);
+  myRemoteLocation = new NetAddress("127.0.0.1", 9700);
 
   senbei = new Senbei(arduino, osc, myRemoteLocation);
   niku = new Niku(arduino, osc, myRemoteLocation);
@@ -62,28 +64,43 @@ void setup()
 
 void draw()
 {
+  x = arduino.analogRead(X);
+  y = arduino.analogRead(Y);
+  z = arduino.analogRead(Z);
   if (isEating())
   {
     isEating = true;
-    x = arduino.analogRead(X);
-    y = arduino.analogRead(Y);
-    z = arduino.analogRead(Z);
 
     if (x > SENSOR_VALUE_FORWARD)
     { 
       volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
       sosyaku(volume);
-    } else {
+      wasSoshaku = true;
+    } else if ( x < SENSOR_VALUE_BACK && wasSoshaku) {
+      gokuri();
     }
   } else {
     isEating = false;
   }
-  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR));
+  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR), "isSwallow=" + isSwallow);
 }
 
 boolean isEating()
 {
-  return arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING;
+  if (isSwallow == false && isEating == false && (arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING))
+  {
+    pakuri();
+    wasSoshaku = false;
+  } else if (arduino.analogRead(EATSENSOR) < SENSOR_VALUE_ISEATING) {
+    isSwallow = false;
+  }
+
+  if (!isSwallow)
+  {
+    return arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING;
+  } else {
+    return false;
+  }
 }
 
 int whichTabemono()//akarusa sensing
@@ -99,7 +116,7 @@ int whichTabemono()//akarusa sensing
 void sosyaku(float volume)
 {
   switch(whichTabemono())
-  //switch(TABEMONO)
+    //switch(TABEMONO)
   {
   case NON:
     senbei.init();
@@ -119,10 +136,20 @@ void sosyaku(float volume)
   }
 }
 
+void pakuri()
+{
+  OscMessage myMessage = new OscMessage("/paku");
+  osc.send(myMessage, myRemoteLocation);
+}
+
 void gokuri()
 {
-  OscMessage myMessage = new OscMessage("/gokuri");
-  osc.send(myMessage, myRemoteLocation);
+  if (!isSwallow)
+  {
+    OscMessage myMessage = new OscMessage("/gokuri");
+    osc.send(myMessage, myRemoteLocation);
+    isSwallow = true;
+  }
 }
 
 void keyPressed()

@@ -19,8 +19,8 @@ class Senbei extends Tabemono
   private void other(float volume)
   {
     playSounds(SOUND_SENBEI_OTHER,volume);
-    forward(255,800);
-    back(255,500);
+    forward(255,300);
+    back(255,100);
     off(10);
   }
 }
