@@ -19,6 +19,6 @@ class Niku extends Tabemono
     playSounds(SOUND_NIKU_OTHER,volume);
     forward(power,400);
     back(power,300);
-    off(400);
+    off(100);
   }
 }

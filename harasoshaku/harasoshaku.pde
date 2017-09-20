@@ -9,17 +9,19 @@ final static int NON = 0;
 final static int SENBEI = 1;
 final static int NIKU = 2;
 
-//shikiichi
-final int SENSOR_VALUE_NORMAL = 415;
-final int SENSOR_VALUE_BACK = 320;
-final int SENSOR_VALUE_FORWARD = 470;
-final int SENSOR_VALUE_FORWARD_MAX = 540;
-final int SENSOR_VALUE_ISEATING = 920;
+///////shikiichi
+//kasokudo
+int SENSOR_VALUE_NORMAL = 650;
+int SENSOR_VALUE_BACK = 610;
+int SENSOR_VALUE_FORWARD = 690;
+int SENSOR_VALUE_FORWARD_MAX = 720;
+//shodo
+final int SENSOR_VALUE_ISEATING = 750;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
 
 //Arduino1
-final int EATSENSOR = 1;
+final int EATSENSOR = 2;
 final int X = 3;
 final int Y = 4;
 final int Z = 5;
@@ -55,7 +57,7 @@ void setup()
 
   arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
   //arduino2 for sensor
-  arduino2 = new Arduino(this, "/dev/cu.usbmodem1411");
+  arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9700);
 
@@ -72,20 +74,22 @@ void draw()
   {
     isEating = true;
 
-    if (x > SENSOR_VALUE_FORWARD)
+    if (z > SENSOR_VALUE_FORWARD)
     { 
       //volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
-      volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : map(x-SENSOR_VALUE_FORWARD,0,SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD,0.5,1);
-      power = (int)map(volume,0,1,170,255);
+      volume = SENSOR_VALUE_FORWARD_MAX < z ? 1 : map(z - SENSOR_VALUE_FORWARD,0,SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD,0.6,1);
+      power = (int)map(volume,0,1,190,255);
       sosyaku(volume,power);
       wasSoshaku = true;
-    } else if ( x < SENSOR_VALUE_BACK && wasSoshaku) {
+    } else if ( z < SENSOR_VALUE_BACK && wasSoshaku) {
       gokuri();
     }
   } else {
     isEating = false;
   }
-  println("x=" + x, "y="+ y, "z="+ z, "volume=" + volume, "isEating=" + isEating, "Tabemono=" + whichTabemono(), "EatVal=" + arduino.analogRead(EATSENSOR), "isSwallow=" + isSwallow, "power=" + power);
+  println("x=" + x, "y="+ y, "z="+ z, "EatVal=" + arduino.analogRead(EATSENSOR), "isEating=" + isEating, "Tabemono=" + whichTabemono(), "isSwallow=" + isSwallow, 
+  "volume=" + volume, "power=" + power, "VALUE_NORMAL=" + SENSOR_VALUE_NORMAL, "VALUE_FORWARD=" + SENSOR_VALUE_FORWARD, "VALUE_FORWARD_MAX=" + SENSOR_VALUE_FORWARD_MAX,
+  "VALUE_BACK=" + SENSOR_VALUE_BACK);
 }
 
 boolean isEating()
@@ -182,16 +186,32 @@ void off(int delay)
 }
 void keyPressed()
 {
-  if (key == 's')
+  //if (key == 's')
+  //{
+  //  TABEMONO = SENBEI;
+  //  background(255, 0, 0);
+  //} else if (key == 'n')
+  //{
+  //  TABEMONO = NIKU;
+  //  background(0, 0, 255);
+  //} else {
+  //  TABEMONO = NON;
+  //  background(0, 0, 0);
+  //}
+  if (key == 'c')//起立状態でC押すと、加速度センサーがキャリブレーションされる
   {
-    TABEMONO = SENBEI;
-    background(255, 0, 0);
-  } else if (key == 'n')
-  {
-    TABEMONO = NIKU;
-    background(0, 0, 255);
-  } else {
-    TABEMONO = NON;
     background(0, 0, 0);
+    SENSOR_VALUE_NORMAL = arduino.analogRead(Z);
+    SENSOR_VALUE_BACK = SENSOR_VALUE_NORMAL - 40;
+    SENSOR_VALUE_FORWARD = SENSOR_VALUE_NORMAL + 40;
+    SENSOR_VALUE_FORWARD_MAX = SENSOR_VALUE_NORMAL + 70;
+  }
+  if (key == 'r')//加速度センサーの値が規定値に戻る
+  {
+    background(0, 0, 0);
+    SENSOR_VALUE_NORMAL = 650;
+    SENSOR_VALUE_BACK = SENSOR_VALUE_NORMAL - 40;
+    SENSOR_VALUE_FORWARD = SENSOR_VALUE_NORMAL + 40;
+    SENSOR_VALUE_FORWARD_MAX = SENSOR_VALUE_NORMAL +70;
   }
 }
