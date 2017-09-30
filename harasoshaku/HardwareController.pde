@@ -33,10 +33,11 @@ class HardwareController
     delay(delay);
   }
 
-  void playSounds(String sound, float power)
+  void playSounds(String sound, float power, int pos)
   {
     OscMessage myMessage = new OscMessage(sound);
     myMessage.add(power);
+    myMessage.add(pos);
     osc.send(myMessage, myRemoteLocation);
   }
 }
