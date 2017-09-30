@@ -42,6 +42,7 @@ Arduino arduino;
 Arduino arduino2;
 OscP5 osc;
 NetAddress myRemoteLocation;
+HardwareController hard;
 
 float x, y, z;
 float volume;
@@ -60,9 +61,10 @@ void setup()
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9700);
+  hard = new HardwareController(arduino,osc,myRemoteLocation);
 
-  senbei = new Senbei(arduino, osc, myRemoteLocation);
-  niku = new Niku(arduino, osc, myRemoteLocation);
+  senbei = new Senbei(hard);
+  niku = new Niku(hard);
 }
 
 void draw()
@@ -76,7 +78,6 @@ void draw()
 
     if (z > SENSOR_VALUE_FORWARD)
     { 
-      //volume = SENSOR_VALUE_FORWARD_MAX < x ? 1 : (x - SENSOR_VALUE_FORWARD) / (SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD);
       volume = SENSOR_VALUE_FORWARD_MAX < z ? 1 : map(z - SENSOR_VALUE_FORWARD,0,SENSOR_VALUE_FORWARD_MAX - SENSOR_VALUE_FORWARD,0.6,1);
       power = (int)map(volume,0,1,190,255);
       sosyaku(volume,power);
@@ -145,73 +146,22 @@ void sosyaku(float volume,int power)
 
 void pakuri()
 {
-  OscMessage myMessage = new OscMessage("/paku");
-  osc.send(myMessage, myRemoteLocation);
-  forward(255,300);
-  off(10);
+  hard.playSounds("/paku",1);
+  hard.forward(255,300);
+  hard.off(10);
 }
 
 void gokuri()
 {
   if (!isSwallow)
   {
-    forward(255,400);
-    OscMessage myMessage = new OscMessage("/gokuri");
-    osc.send(myMessage, myRemoteLocation);
+    hard.forward(255,400);
+    hard.playSounds("/gokuri",1);
     isSwallow = true;
-    back(255,400);
-    off(10);
+    hard.back(255,400);
+    hard.off(10);
   }
-}
-
-void forward(int power, int delay)
-{
-  arduino.digitalWrite(AIN1, Arduino.HIGH);
-  arduino.digitalWrite(AIN2, Arduino.LOW);
-  arduino.analogWrite(PWMA, power);
-  delay(delay);
-}
-void back(int power, int delay)
-{
-  arduino.digitalWrite(AIN1, Arduino.LOW);
-  arduino.digitalWrite(AIN2, Arduino.HIGH);
-  arduino.analogWrite(PWMA, power);
-  delay(delay);
-}
-void off(int delay)
-{
-  arduino.digitalWrite(AIN1, Arduino.LOW);
-  arduino.digitalWrite(AIN2, Arduino.LOW);
-  delay(delay);
 }
 void keyPressed()
 {
-  //if (key == 's')
-  //{
-  //  TABEMONO = SENBEI;
-  //  background(255, 0, 0);
-  //} else if (key == 'n')
-  //{
-  //  TABEMONO = NIKU;
-  //  background(0, 0, 255);
-  //} else {
-  //  TABEMONO = NON;
-  //  background(0, 0, 0);
-  //}
-  if (key == 'c')//起立状態でC押すと、加速度センサーがキャリブレーションされる
-  {
-    background(0, 0, 0);
-    SENSOR_VALUE_NORMAL = arduino.analogRead(Z);
-    SENSOR_VALUE_BACK = SENSOR_VALUE_NORMAL - 40;
-    SENSOR_VALUE_FORWARD = SENSOR_VALUE_NORMAL + 40;
-    SENSOR_VALUE_FORWARD_MAX = SENSOR_VALUE_NORMAL + 70;
-  }
-  if (key == 'r')//加速度センサーの値が規定値に戻る
-  {
-    background(0, 0, 0);
-    SENSOR_VALUE_NORMAL = 650;
-    SENSOR_VALUE_BACK = SENSOR_VALUE_NORMAL - 40;
-    SENSOR_VALUE_FORWARD = SENSOR_VALUE_NORMAL + 40;
-    SENSOR_VALUE_FORWARD_MAX = SENSOR_VALUE_NORMAL +70;
-  }
 }

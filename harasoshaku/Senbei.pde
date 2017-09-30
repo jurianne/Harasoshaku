@@ -2,9 +2,9 @@ class Senbei extends Tabemono
 {
   private final String SOUND_SENBEI_OTHER = "/sother";
   
-  Senbei(Arduino ard, OscP5 osc,NetAddress netAddress)
+  Senbei(HardwareController _hard)
   {
-    super(ard,osc,netAddress);
+    super(_hard);
   }
   
   public void init()
@@ -18,9 +18,9 @@ class Senbei extends Tabemono
   
   private void other(float volume,int power)
   {
-    playSounds(SOUND_SENBEI_OTHER,volume);
-    forward(power,300);
-    back(power,100);
-    off(100);
+    hard.playSounds(SOUND_SENBEI_OTHER,volume);
+    hard.forward(power,300);
+    hard.back(power,100);
+    hard.off(100);
   }
 }

@@ -11,7 +11,7 @@ final int Z = 5;
 final int normal_x = 520;
 final int normal_y = 270;
 final int normal_z = 520;
-final int offset = 30;
+final int offset = 100;
 
 int x,y,z;
 int offset_x,offset_y,offset_z;
@@ -27,14 +27,15 @@ void draw()
   y = arduino.analogRead(Y);
   z = arduino.analogRead(Z);
   
-  offset_x = abs(normal_x - x) > offset? normal_x-x : 0;
-  offset_y = abs(normal_y - y) > offset? normal_y-y : 0;
-  offset_z = abs(normal_z - z) > offset? normal_z-z : 0;
+  offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
+  offset_y = abs(y - normal_y) > offset? y-normal_y : 0;
+  offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
   
   if(offset_x > 0)print("right");
-  if(offset_x < 0)print("left");
-  if(offset_x == 0 && offset_z > 0)print("forward");
-  if(offset_x == 0 && offset_z < 0)print("back");
+  else if(offset_x < 0)print("left");
+  else if(offset_x == 0 && offset_z > 0)print("forward");
+  else if(offset_x == 0 && offset_z < 0)print("back");
+  else print("normal");
   
-  println(x,y,z);
+  println("");
 }
