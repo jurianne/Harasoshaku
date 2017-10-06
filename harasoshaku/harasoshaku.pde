@@ -15,7 +15,6 @@ final static int POS_RIGHT = 2;
 final static int POS_LEFT = 3;
 final static int POS_BACK = 4;
 
-//shodo
 final int SENSOR_VALUE_ISEATING = 750;
 final int SENSOR_VALUE_SENBEI = 980;
 final int SENSOR_VALUE_NIKU = 1000;
@@ -143,8 +142,6 @@ void sosyaku(float volume,int power,int pos)
     //switch(TABEMONO)
   {
   case NON:
-    senbei.init();
-    niku.init();
     break;
   case SENBEI:
     senbei.sosyaku(volume,power,pos);

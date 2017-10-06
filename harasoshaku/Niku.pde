@@ -7,9 +7,6 @@ class Niku extends Tabemono
     super(_hard);
   }
   
-  public void init()
-  {
-  }
   public void sosyaku(float volume,int power, int pos)
   {
     other(volume,power,pos);

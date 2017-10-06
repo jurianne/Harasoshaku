@@ -24,11 +24,9 @@ void setup()
 void draw()
 {
   x = arduino.analogRead(X);
-  y = arduino.analogRead(Y);
   z = arduino.analogRead(Z);
   
   offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
-  offset_y = abs(y - normal_y) > offset? y-normal_y : 0;
   offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
   
   if(offset_x > 0)print("right");
