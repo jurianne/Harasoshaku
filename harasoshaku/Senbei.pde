@@ -1,6 +1,8 @@
 class Senbei extends Tabemono
 {
   private final String SOUND_SENBEI_OTHER = "/sother";
+  final int SENBEI_SENSOR = 0;
+  final int SENSOR_VALUE_SENBEI = 980;
   
   Senbei(HardwareController _hard)
   {
@@ -10,6 +12,10 @@ class Senbei extends Tabemono
   public void sosyaku(float volume, int power, int pos)
   {
     other(volume,power,pos);
+  }
+  public boolean isOntheTable(Arduino ard)
+  {
+    return SENSOR_VALUE_SENBEI - ard.analogRead(SENBEI_SENSOR) >= 80;
   }
   
   private void other(float volume,int power, int pos)

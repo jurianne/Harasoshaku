@@ -8,6 +8,7 @@ import processing.serial.*;
 final static int NON = 0;
 final static int SENBEI = 1;
 final static int NIKU = 2;
+final static int Pachipachi = 3;
 
 final static int POS_NORMAL = 0;
 final static int POS_FORWARD = 1;
@@ -15,16 +16,14 @@ final static int POS_RIGHT = 2;
 final static int POS_LEFT = 3;
 final static int POS_BACK = 4;
 
-final int SENSOR_VALUE_ISEATING = 750;
-final int SENSOR_VALUE_SENBEI = 980;
-final int SENSOR_VALUE_NIKU = 1000;
+final int SENSOR_VALUE_ISEATING = 10;
 
 final int normal_x = 520;
 final int normal_y = 270;
 final int normal_z = 520;
 final int offset = 100;
 
-int offset_x,offset_y,offset_z;
+int offset_x, offset_y, offset_z;
 
 //Arduino1
 final int EATSENSOR = 2;
@@ -38,11 +37,13 @@ final static int PWMA = 9;
 //Arduino2
 final int SENBEI_SENSOR = 0;
 final int NIKU_SENSOR = 1;
+final int PACHIPACHI_SENSOR = 2;
 
 int TABEMONO = 0;
 
 Senbei senbei;
 Niku niku;
+Pachipachi pachipachi;
 
 Arduino arduino;
 Arduino arduino2;
@@ -53,10 +54,13 @@ HardwareController hard;
 int x, y, z;
 float volume;
 int power;
-int senbeiVal, nikuVal;
+int senbeiVal, nikuVal, pachipachiVal;
 boolean isEating = false;
 boolean isSwallow = false;
 boolean wasSoshaku = false;//soshaku shitaka douka
+
+Tabemono cTabemono;
+ArrayList<Tabemono> table = new ArrayList<Tabemono>();
 
 void setup()
 {
@@ -67,129 +71,66 @@ void setup()
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9700);
-  hard = new HardwareController(arduino,osc,myRemoteLocation);
+  hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   senbei = new Senbei(hard);
   niku = new Niku(hard);
+  pachipachi = new Pachipachi(hard);
+  table.add(senbei);
+  table.add(niku);
+  table.add(pachipachi);
 }
 
 void draw()
 {
   if (isEating())
   {
-    isEating = true;
-    
-    switch(whichPos())
-    {
-      case POS_FORWARD:
-        sosyaku(1,255,POS_FORWARD);
-        wasSoshaku = true;
-        break;
-      case POS_RIGHT:
-        sosyaku(1,255,POS_RIGHT);
-        wasSoshaku = true;
-        break;
-      case POS_LEFT:
-        sosyaku(1,255,POS_LEFT);
-        wasSoshaku = true;
-        break;
-      case POS_BACK:
-        gokuri();
-        break;
-      case POS_NORMAL:
-        break;
-      default:
-        break;
-    }
-  } else {
-    isEating = false;
-  }
-  println("x=" + x, "y="+ y, "z="+ z, "EatVal=" + arduino.analogRead(EATSENSOR), "isEating=" + isEating, "Tabemono=" + whichTabemono(), "isSwallow=" + isSwallow, 
-  "volume=" + volume, "power=" + power);
-}
-
-boolean isEating()
-{
-  if (isSwallow == false && isEating == false && (arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING))
-  {
-    pakuri();
-    wasSoshaku = false;
-  } else if (arduino.analogRead(EATSENSOR) < SENSOR_VALUE_ISEATING) {
-    isSwallow = false;
-  }
-
-  if (!isSwallow)
-  {
-    return arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING;
-  } else {
-    return false;
+    if (cTabemono != null)cTabemono.sosyaku(1, 255, whichPos());
+    else println("cTabemono is null");
   }
 }
 
-int whichTabemono()//akarusa sensing
+void swallow()
 {
-  senbeiVal = arduino2.analogRead(SENBEI_SENSOR);
-  nikuVal = arduino2.analogRead(NIKU_SENSOR);
-
-  if (SENSOR_VALUE_SENBEI - senbeiVal >= 80) return SENBEI;
-  else if (SENSOR_VALUE_NIKU - nikuVal >= 80) return NIKU;
-  return NON;
+  cTabemono = null;
 }
-
-void sosyaku(float volume,int power,int pos)
-{
-  switch(whichTabemono())
-    //switch(TABEMONO)
-  {
-  case NON:
-    break;
-  case SENBEI:
-    senbei.sosyaku(volume,power,pos);
-    background(255, 0, 0);
-    break;
-  case NIKU:
-    niku.sosyaku(volume,power,pos);
-    background(0, 0, 255);
-    break;
-  default:
-    println("[sosyaku]error");
-    break;
-  }
-}
-
-void pakuri()
-{
-  hard.playSounds("/paku",1,POS_FORWARD);
-  hard.forward(255,300);
-  hard.off(10);
-}
-
-void gokuri()
-{
-  if (!isSwallow)
-  {
-    hard.forward(255,400);
-    hard.playSounds("/gokuri",1,POS_FORWARD);
-    isSwallow = true;
-    hard.back(255,400);
-    hard.off(10);
-  }
-}
-
 int whichPos()
 {
   x = arduino.analogRead(X);
   z = arduino.analogRead(Z);
-  
+
   offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
   offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
-  
-  if(offset_x > 0)return POS_RIGHT;
-  else if(offset_x < 0)return POS_LEFT;
-  else if(offset_x == 0 && offset_z > 0)return POS_FORWARD;
-  else if(offset_x == 0 && offset_z < 0)return POS_BACK;
+
+  if (offset_x > 0)return POS_RIGHT;
+  else if (offset_x < 0)return POS_LEFT;
+  else if (offset_x == 0 && offset_z > 0)return POS_FORWARD;
+  else if (offset_x == 0 && offset_z < 0)return POS_BACK;
   return POS_NORMAL;
 }
-void keyPressed()
+boolean isEating()
 {
+  if (cTabemono == null && arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING)
+  {
+    pakuri();
+    for (Tabemono tabemono : table)
+    {
+      cTabemono = tabemono.isOntheTable(arduino2) ? null : tabemono;
+    }
+    if (cTabemono != null)
+    {
+      table.remove(cTabemono);
+      return true;
+    } else {
+      return false;
+    }
+  }else{
+    return false;
+  }
+}
+void pakuri()
+{
+  hard.playSounds("/paku", 1, POS_FORWARD);
+  hard.forward(255, 300);
+  hard.off(10);
 }
