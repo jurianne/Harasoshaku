@@ -10,7 +10,18 @@ class Pachipachi extends Tabemono
   }
   public void sosyaku(float volume,int power, int pos)
   {
-    other(volume,power,pos);
+    if (isSwallow == false)
+    {
+      if (pos == POS_NORMAL)return;
+      if (pos == POS_BACK)
+      {
+        gokuri();
+        swallow();
+        isSwallow = true;
+      } else {
+        other(volume, power, pos);
+      }
+    }
   }
   public boolean isOntheTable(Arduino ard)
   {
