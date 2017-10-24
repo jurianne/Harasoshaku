@@ -1,4 +1,4 @@
-#N canvas 182 113 1125 680 10;
+#N canvas 478 266 1125 680 10;
 #N canvas 511 191 770 609 init 0;
 #X obj 97 36 inlet;
 #X obj 42 474 soundfiler;
@@ -67,7 +67,7 @@
 #X restore 509 268 pd init;
 #X obj 509 73 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#N canvas 242 403 633 457 shindo 1;
+#N canvas 115 88 633 457 shindo 1;
 #X obj 67 43 inlet;
 #X msg 226 157 1;
 #X msg 262 157 0;
@@ -94,7 +94,7 @@
 #X floatatom 578 328 0 0 0 0 - - -;
 #X obj 611 243 metro 1;
 #X obj 578 84 receive~ shindo1;
-#X obj 78 279 send~ shindo1;
+#X obj 75 355 send~ shindo1;
 #X obj 156 274 send shindo2;
 #X obj 629 313 receive shindo2;
 #X obj 639 281 receive bairitsu;
@@ -194,7 +194,7 @@
 #X floatatom 24 145 5 0 0 0 - - -;
 #X obj 23 180 send volume;
 #X floatatom -55 148 5 0 0 0 - - -;
-#X obj 67 95 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 87 91 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
 #X obj 311 200 tabplay~ goku;
 #X obj 137 160 send bairitsu;
@@ -211,12 +211,12 @@
 #X msg 884 201 0;
 #X msg 915 201 1;
 #X obj 630 183 send~ out;
-#X obj 685 222 receive~ out;
+#X obj 855 130 receive~ out;
 #X obj 741 331 receive~ out2;
 #X obj 766 424 dac~;
 #X obj 746 366 *~;
 #X obj 777 366 *~;
-#X obj 9 303 send~ barabaraout;
+#X obj -128 329 send~ barabaraout;
 #X obj 611 103 receive~ barabaraout;
 #X obj 323 579 dac~;
 #X msg 136 139 1.5;
@@ -232,10 +232,10 @@
 #X restore -21 466 pd sounds_etc;
 #X obj 483 451 tabplay~ paku;
 #X obj 442 498 send bairitsu;
-#X obj 439 308 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+#X obj 342 390 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X msg 442 476 1;
-#N canvas 514 302 591 431 play_sounds_random_senbei 1;
+#N canvas 513 395 591 431 play_sounds_random_senbei 0;
 #X obj 83 37 inlet;
 #X obj 86 130 sel 0;
 #X obj 250 130 sel 2;

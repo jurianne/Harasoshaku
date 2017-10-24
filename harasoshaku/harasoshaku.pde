@@ -67,7 +67,6 @@ void setup()
   size(500, 500);
 
   arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
-  //arduino2 for sensor
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9700);
