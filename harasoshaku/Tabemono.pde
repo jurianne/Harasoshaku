@@ -1,10 +1,10 @@
-abstract class Tabemono
+abstract class Edible
 {
   protected HardwareController hard;
   protected boolean isSwallow;
   abstract void sosyaku(float volume, int power, int pos);
   abstract boolean isOntheTable(Arduino ard);
-  Tabemono(HardwareController _hard)
+  Edible(HardwareController _hard)
   {
     hard = _hard;
     isSwallow = false;

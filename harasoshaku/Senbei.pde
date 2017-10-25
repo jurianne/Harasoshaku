@@ -1,4 +1,4 @@
-class Senbei extends Tabemono
+class Senbei extends Edible
 {
   private final String SOUND_SENBEI_OTHER = "/sother";
   final int SENBEI_SENSOR = 0;
@@ -18,7 +18,6 @@ class Senbei extends Tabemono
       {
         gokuri();
         swallow();
-        isSwallow = true;
       } else {
         other(volume, power, pos);
       }

@@ -1,4 +1,4 @@
-class Niku extends Tabemono
+class Niku extends Edible
 {
   private final String SOUND_NIKU_OTHER = "/nother";
   final int SENSOR_VALUE_NIKU = 1000;
@@ -17,7 +17,6 @@ class Niku extends Tabemono
       {
         gokuri();
         swallow();
-        isSwallow = true;
       } else {
         other(volume, power, pos);
       }

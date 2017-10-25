@@ -1,4 +1,4 @@
-class Pachipachi extends Tabemono
+class Pachipachi extends Edible
 {
   private final String SOUND_PACHIPACHI_OTHER = "/pother";
   private final String SOUND_PACHIPACHI_START = "/pstart";
@@ -20,7 +20,6 @@ class Pachipachi extends Tabemono
         gokuri();
         hard.playSounds(SOUND_PACHIPACHI_FINISH,1,0);
         swallow();
-        isSwallow = true;
       } else {
         other(volume, power, pos);
       }
