@@ -24,6 +24,9 @@ class Senbei extends Tabemono
       }
     }
   }
+  public void startEating()
+  {
+  }
   public boolean isOntheTable(Arduino ard)
   {
     return SENSOR_VALUE_SENBEI - ard.analogRead(SENBEI_SENSOR) >= 80;

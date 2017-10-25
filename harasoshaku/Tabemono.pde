@@ -17,4 +17,5 @@ abstract class Tabemono
     hard.back(255, 400);
     hard.off(10);
   }
+  abstract void startEating();
 }

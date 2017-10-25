@@ -23,6 +23,9 @@ class Niku extends Tabemono
       }
     }
   }
+  public void startEating()
+  {
+  }
   public boolean isOntheTable(Arduino ard)
   {
     return SENSOR_VALUE_NIKU - ard.analogRead(NIKU_SENSOR) >= 80;

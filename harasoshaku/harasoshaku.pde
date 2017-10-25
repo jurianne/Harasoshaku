@@ -69,7 +69,7 @@ void setup()
   arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9700);
+  myRemoteLocation = new NetAddress("127.0.0.1", 9800);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   senbei = new Senbei(hard);
@@ -82,11 +82,11 @@ void setup()
 
 void draw()
 {
-  if (isEating())
+  isEating();//call first
+  if (cTabemono != null)
   {
-    if (cTabemono != null)cTabemono.sosyaku(1, 255, whichPos());
-    else println("cTabemono is null");
-  }
+    cTabemono.sosyaku(1, 255, whichPos());
+  }else println("cTabemono is null");
 }
 
 void swallow()
@@ -111,6 +111,7 @@ boolean isEating()
 {
   if (cTabemono == null && arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING)
   {
+    cTabemono.startEating();
     pakuri();
     for (Tabemono tabemono : table)
     {
@@ -127,6 +128,7 @@ boolean isEating()
     return false;
   }
 }
+
 void pakuri()
 {
   hard.playSounds("/paku", 1, POS_FORWARD);
