@@ -19,7 +19,8 @@ class Senbei extends Edible
         gokuri();
         swallow();
       } else {
-        other(volume, power, pos);
+        other(volume, power, pos, count);
+        count++;
       }
     }
   }
@@ -31,9 +32,9 @@ class Senbei extends Edible
     return SENSOR_VALUE_SENBEI - ard.analogRead(SENBEI_SENSOR) >= 80;
   }
   
-  private void other(float volume,int power, int pos)
+  private void other(float volume,int power, int pos, int count)
   {
-    hard.playSounds(SOUND_SENBEI_OTHER,volume,pos);
+    hard.playSounds(SOUND_SENBEI_OTHER,volume,pos,count);
     hard.forward(power,300);
     hard.back(power,100);
     hard.off(100);

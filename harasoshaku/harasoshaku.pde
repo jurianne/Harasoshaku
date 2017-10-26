@@ -109,6 +109,7 @@ void draw_display()
   if (mode == MODE_DEBUG)text("mode = debug", 10, 105);
   else if (mode == MODE_PRODUCT)text("mode = product", 10, 105);
   else text("mode = null", 10, 105);
+  if(cTabemono != null)text("cTabemono = "+cTabemono.getCount(),10,120);
 }
 
 void swallow()
@@ -155,7 +156,7 @@ boolean isEating()
 
 void pakuri()
 {
-  hard.playSounds("/paku", 1, POS_FORWARD);
+  hard.playSounds("/paku", 1, POS_FORWARD,99);
   hard.forward(255, 300);
   hard.off(10);
 }
@@ -179,7 +180,7 @@ void init_product()
 
 void init_debug()
 {
-  if(arduino == null)arduino = new Arduino(this, "/dev/cu.usbserial-A1065T1O");
+  //if(arduino == null)arduino = new Arduino(this, "/dev/cu.usbserial-A1065T1O");
   
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", 9200);

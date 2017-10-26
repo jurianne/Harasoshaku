@@ -18,24 +18,25 @@ class Pachipachi extends Edible
       if (pos == POS_BACK)
       {
         gokuri();
-        hard.playSounds(SOUND_PACHIPACHI_FINISH,1,0);
+        hard.playSounds(SOUND_PACHIPACHI_FINISH,1,0,count);
         swallow();
       } else {
-        other(volume, power, pos);
+        other(volume, power, pos, count);
+        count ++;
       }
     }
   }
   public void startEating()
   {
-    hard.playSounds(SOUND_PACHIPACHI_START,1,0);
+    hard.playSounds(SOUND_PACHIPACHI_START,1,0,count);
   }
   public boolean isOntheTable(Arduino ard)
   {
     return SENSOR_VALUE_PACHIPACHI - ard.analogRead(PACHIPACHI_SENSOR) >= 80;
   }
-  private void other(float volume,int power, int pos)
+  private void other(float volume,int power, int pos,int count)
   {
-    hard.playSounds(SOUND_PACHIPACHI_OTHER,volume,pos);
+    hard.playSounds(SOUND_PACHIPACHI_OTHER,volume,pos,count);
     hard.forward(power,400);
     hard.back(power,300);
     hard.off(100);

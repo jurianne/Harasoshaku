@@ -18,7 +18,8 @@ class Niku extends Edible
         gokuri();
         swallow();
       } else {
-        other(volume, power, pos);
+        other(volume, power, pos, count);
+        count ++;
       }
     }
   }
@@ -29,9 +30,9 @@ class Niku extends Edible
   {
     return SENSOR_VALUE_NIKU - ard.analogRead(NIKU_SENSOR) >= 80;
   }
-  private void other(float volume, int power, int pos)
+  private void other(float volume, int power, int pos, int count)
   {
-    hard.playSounds(SOUND_NIKU_OTHER, volume, pos);
+    hard.playSounds(SOUND_NIKU_OTHER, volume, pos, count);
     hard.forward(power, 400);
     hard.back(power, 300);
     hard.off(100);

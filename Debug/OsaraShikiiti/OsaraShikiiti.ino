@@ -8,11 +8,11 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  Serial.print(analogRead(0));
+  Serial.print(",");
+  Serial.print(analogRead(1));
+  Serial.print(",");
   Serial.print(analogRead(2));
-//  Serial.print(",");
-//  Serial.print(analogRead(1));
-//  Serial.print(",");
-//  Serial.print(analogRead(5));
   Serial.println();
   
 }
