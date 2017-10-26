@@ -12,7 +12,7 @@ class HardwareController
   }
   void forward(int power, int delay)
   {
-    if (mode == MODE_PRODUCT)
+    //if (mode == MODE_PRODUCT)
     {
       arduino.digitalWrite(AIN1, Arduino.HIGH);
       arduino.digitalWrite(AIN2, Arduino.LOW);
@@ -23,7 +23,7 @@ class HardwareController
 
   void back(int power, int delay)
   {
-    if (mode == MODE_PRODUCT)
+    //if (mode == MODE_PRODUCT)
     {
       arduino.digitalWrite(AIN1, Arduino.LOW);
       arduino.digitalWrite(AIN2, Arduino.HIGH);
@@ -34,7 +34,7 @@ class HardwareController
 
   void off(int delay)
   {
-    if (mode == MODE_PRODUCT)
+    //if (mode == MODE_PRODUCT)
     {
       arduino.digitalWrite(AIN1, Arduino.LOW);
       arduino.digitalWrite(AIN2, Arduino.LOW);

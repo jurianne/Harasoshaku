@@ -165,7 +165,7 @@ void init_product()
   arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
   arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9900);
+  myRemoteLocation = new NetAddress("127.0.0.1", 9200);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   table = new ArrayList<Edible>();
@@ -179,8 +179,10 @@ void init_product()
 
 void init_debug()
 {
+  if(arduino == null)arduino = new Arduino(this, "/dev/cu.usbserial-A1065T1O");
+  
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9900);
+  myRemoteLocation = new NetAddress("127.0.0.1", 9200);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   table = new ArrayList<Edible>();
@@ -194,13 +196,13 @@ void init_debug()
 
 void keyPressed()
 {
-  if (key == 'd')
+  if (key == 'n')
   {
     mode = MODE_DEBUG;
     init_debug();
     println("debug mode");
   }
-  if (key == 'p')
+  if (key == 'm')
   {
     mode = MODE_PRODUCT;
     init_product();
@@ -232,6 +234,16 @@ void keyPressed()
         cTabemono.startEating();
       }
       if (key == 's')
+      {
+        cTabemono.sosyaku(1, 255, POS_FORWARD);
+        cTabemono.startEating();
+      }
+      if (key == 'd')
+      {
+        cTabemono.sosyaku(1, 255, POS_RIGHT);
+        cTabemono.startEating();
+      }
+      if (key == 'f')
       {
         cTabemono.sosyaku(1, 255, POS_BACK);
       }
