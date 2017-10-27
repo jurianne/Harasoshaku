@@ -18,7 +18,7 @@ int offset_x,offset_y,offset_z;
 
 void setup()
 {
-  arduino = new Arduino(this, "/dev/cu.usbserial-14P54747"); 
+  arduino = new Arduino(this, "/dev/cu.usbserial-A1065T1O"); 
 }
 
 void draw()
@@ -26,14 +26,17 @@ void draw()
   x = arduino.analogRead(X);
   z = arduino.analogRead(Z);
   
-  offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
-  offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
+  print(x+" "+z);
   
-  if(offset_x > 0)print("right");
-  else if(offset_x < 0)print("left");
-  else if(offset_x == 0 && offset_z > 0)print("forward");
-  else if(offset_x == 0 && offset_z < 0)print("back");
-  else print("normal");
+  //offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
+  //offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
+  
+  //if(offset_x > 0)print("right");
+  //else if(offset_x < 0)print("left");
+  //else if(offset_x == 0 && offset_z > 0)print("forward");
+  //else if(offset_x == 0 && offset_z < 0)print("back");
+  //else print("normal");
+ 
   
   println("");
 }

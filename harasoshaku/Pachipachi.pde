@@ -3,8 +3,6 @@ class Pachipachi extends Edible
   private final String SOUND_PACHIPACHI_OTHER = "/pother";
   private final String SOUND_PACHIPACHI_START = "/pstart";
   private final String SOUND_PACHIPACHI_FINISH = "/pfinish";
-  final int SENSOR_VALUE_PACHIPACHI = 1000;
-  final int PACHIPACHI_SENSOR = 2;
   
   Pachipachi(HardwareController _hard)
   {
@@ -32,7 +30,7 @@ class Pachipachi extends Edible
   }
   public boolean isOntheTable(Arduino ard)
   {
-    return SENSOR_VALUE_PACHIPACHI - ard.analogRead(PACHIPACHI_SENSOR) >= 80;
+    return SENSOR_VALUE_PACHIPACHI - ard.analogRead(PACHIPACHI_SENSOR) <= SENSOR_VALUE_PLATE_OFFSET;
   }
   private void other(float volume,int power, int pos,int count)
   {

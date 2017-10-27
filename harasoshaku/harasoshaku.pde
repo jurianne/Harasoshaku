@@ -5,6 +5,11 @@ import cc.arduino.*;
 import org.firmata.*;
 import processing.serial.*;
 
+final static int OSC_PORT = 9400;
+final static String ARDUINO1 = "/dev/cu.usbserial-A1065T1O";
+final static String ARDUINO2 = "/dev/cu.usbmodem1411";
+
+
 final static int MODE_DEBUG = 1029;
 final static int MODE_PRODUCT = 1028;
 
@@ -19,17 +24,21 @@ final static int POS_RIGHT = 2;
 final static int POS_LEFT = 3;
 final static int POS_BACK = 4;
 
-final int SENSOR_VALUE_ISEATING = 10;
+final int SENSOR_VALUE_NIKU = 937;
+final int SENSOR_VALUE_PACHIPACHI = 970;
+final int SENSOR_VALUE_SENBEI = 835;
+final int SENSOR_VALUE_PLATE_OFFSET = 150;
 
-final int normal_x = 520;
-final int normal_y = 270;
-final int normal_z = 520;
-final int offset = 100;
+final int SENSOR_VALUE_ISEATING = 470;
+
+int normal_x = 520;
+int normal_z = 520;
+final int offset = 70;
 
 int offset_x, offset_y, offset_z;
 
 //Arduino1
-final int EATSENSOR = 2;
+final int EATSENSOR = 0;
 final int X = 7;
 final int Y = 6;
 final int Z = 5;
@@ -38,9 +47,9 @@ final static int AIN2 = 10;
 final static int PWMA = 9;
 
 //Arduino2
-final int SENBEI_SENSOR = 0;
-final int NIKU_SENSOR = 1;
-final int PACHIPACHI_SENSOR = 2;
+final int SENBEI_SENSOR = 1;
+final int NIKU_SENSOR = 2;
+final int PACHIPACHI_SENSOR = 0;
 
 int TABEMONO = 0;
 
@@ -86,10 +95,12 @@ void draw()
 
 void draw_debug()
 {
+  updateSensor();
 }
 
 void draw_product()
 {
+  updateSensor();
   isEating();//call first
   if (cTabemono != null)
   {
@@ -98,7 +109,8 @@ void draw_product()
 }
 
 void draw_display()
-{
+{ 
+  
   background(0);
   fill(255);
   text("dish_senbei = "+dish_senbei+"\ndish_niku = "+dish_niku+"\ndish_pachipachi = "+dish_pachipachi, 10, 10);
@@ -110,6 +122,20 @@ void draw_display()
   else if (mode == MODE_PRODUCT)text("mode = product", 10, 105);
   else text("mode = null", 10, 105);
   if(cTabemono != null)text("cTabemono = "+cTabemono.getCount(),10,120);
+  text("x = "+x+" y = "+y+" z = "+z,10,135);
+  if(table != null)text("table = "+table.size(),10,150);
+  
+}
+
+void updateSensor()
+{
+  mouse = arduino.analogRead(EATSENSOR);
+  x = arduino.analogRead(X);
+  y = arduino.analogRead(Y);
+  z = arduino.analogRead(Z);
+  dish_niku = arduino2.analogRead(NIKU_SENSOR);
+  dish_pachipachi = arduino2.analogRead(PACHIPACHI_SENSOR);
+  dish_senbei = arduino2.analogRead(SENBEI_SENSOR);
 }
 
 void swallow()
@@ -119,16 +145,14 @@ void swallow()
 
 int whichPos()
 {
-  x = arduino.analogRead(X);
-  z = arduino.analogRead(Z);
 
   offset_x = abs(x - normal_x) > offset? x-normal_x : 0;
   offset_z = abs(z - normal_z) > offset? z-normal_z : 0;
 
-  if (offset_x > 0)return POS_RIGHT;
-  else if (offset_x < 0)return POS_LEFT;
-  else if (offset_x == 0 && offset_z > 0)return POS_FORWARD;
-  else if (offset_x == 0 && offset_z < 0)return POS_BACK;
+  if (offset_x > 0)return POS_FORWARD;
+  else if (offset_x < 0)return POS_BACK;
+  else if (offset_x == 0 && offset_z > 0)return POS_LEFT;
+  else if (offset_x == 0 && offset_z < 0)return POS_RIGHT;
   return POS_NORMAL;
 }
 
@@ -136,14 +160,15 @@ boolean isEating()
 {
   if (cTabemono == null && arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING)
   {
-    cTabemono.startEating();
     pakuri();
     for (Edible tabemono : table)
     {
       cTabemono = tabemono.isOntheTable(arduino2) ? null : tabemono;
+      if(cTabemono != null)break;
     }
     if (cTabemono != null)
     {
+      cTabemono.startEating();
       table.remove(cTabemono);
       return true;
     } else {
@@ -163,10 +188,10 @@ void pakuri()
 
 void init_product()
 {
-  arduino = new Arduino(this, "/dev/cu.usbserial-14P54747");
-  arduino2 = new Arduino(this, "/dev/cu.usbmodem1421");
+  arduino = new Arduino(this, ARDUINO1);
+  arduino2 = new Arduino(this, ARDUINO2);
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9200);
+  myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   table = new ArrayList<Edible>();
@@ -180,10 +205,11 @@ void init_product()
 
 void init_debug()
 {
-  //if(arduino == null)arduino = new Arduino(this, "/dev/cu.usbserial-A1065T1O");
+  if(arduino == null)arduino = new Arduino(this, ARDUINO1);
+  if(arduino2 == null)arduino2 = new Arduino(this,ARDUINO2);
   
   osc = new OscP5(this, 1234);
-  myRemoteLocation = new NetAddress("127.0.0.1", 9200);
+  myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
 
   table = new ArrayList<Edible>();
@@ -197,6 +223,11 @@ void init_debug()
 
 void keyPressed()
 {
+  if (key == 'C')
+  {
+    normal_x = arduino.analogRead(X);
+    normal_z = arduino.analogRead(Z);
+  }
   if (key == 'n')
   {
     mode = MODE_DEBUG;

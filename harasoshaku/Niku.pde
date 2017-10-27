@@ -1,8 +1,6 @@
 class Niku extends Edible
 {
   private final String SOUND_NIKU_OTHER = "/nother";
-  final int SENSOR_VALUE_NIKU = 1000;
-  final int NIKU_SENSOR = 1;
 
   Niku(HardwareController _hard)
   {
@@ -28,7 +26,7 @@ class Niku extends Edible
   }
   public boolean isOntheTable(Arduino ard)
   {
-    return SENSOR_VALUE_NIKU - ard.analogRead(NIKU_SENSOR) >= 80;
+    return SENSOR_VALUE_NIKU - ard.analogRead(NIKU_SENSOR) <= SENSOR_VALUE_PLATE_OFFSET;
   }
   private void other(float volume, int power, int pos, int count)
   {

@@ -1,8 +1,6 @@
 class Senbei extends Edible
 {
   private final String SOUND_SENBEI_OTHER = "/sother";
-  final int SENBEI_SENSOR = 0;
-  final int SENSOR_VALUE_SENBEI = 980;
   
   Senbei(HardwareController _hard)
   {
@@ -29,7 +27,7 @@ class Senbei extends Edible
   }
   public boolean isOntheTable(Arduino ard)
   {
-    return SENSOR_VALUE_SENBEI - ard.analogRead(SENBEI_SENSOR) >= 80;
+    return SENSOR_VALUE_SENBEI - ard.analogRead(SENBEI_SENSOR) <= SENSOR_VALUE_PLATE_OFFSET;
   }
   
   private void other(float volume,int power, int pos, int count)
