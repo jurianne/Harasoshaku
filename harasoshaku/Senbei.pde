@@ -17,8 +17,10 @@ class Senbei extends Edible
         gokuri();
         swallow();
       } else {
-        other(volume, power, pos, count);
-        count++;
+        count ++;
+        localvolume = MAX_SOSHAKU_VOLUME - ((MAX_SOSHAKU_VOLUME - MIN_SOSHAKU_VOLUME) / MAX_SOSHAKU_NUM * count);
+        if(localvolume < MIN_SOSHAKU_VOLUME)localvolume = MIN_SOSHAKU_VOLUME;
+        other(localvolume, power, pos, count);
       }
     }
   }

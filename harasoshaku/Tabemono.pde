@@ -2,6 +2,7 @@ abstract class Edible
 {
   protected HardwareController hard;
   protected int count;
+  protected float localvolume;
   protected boolean isSwallow;
   abstract void sosyaku(float volume, int power, int pos);
   abstract boolean isOntheTable(Arduino ard);

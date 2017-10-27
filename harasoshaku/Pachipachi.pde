@@ -19,8 +19,10 @@ class Pachipachi extends Edible
         hard.playSounds(SOUND_PACHIPACHI_FINISH,1,0,count);
         swallow();
       } else {
-        other(volume, power, pos, count);
         count ++;
+        localvolume = MAX_SOSHAKU_VOLUME - ((MAX_SOSHAKU_VOLUME - MIN_SOSHAKU_VOLUME) / MAX_SOSHAKU_NUM * count);
+        if(localvolume < MIN_SOSHAKU_VOLUME)localvolume = MIN_SOSHAKU_VOLUME;
+        other(localvolume, power, pos, count);
       }
     }
   }

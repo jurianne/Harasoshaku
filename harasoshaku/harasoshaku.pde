@@ -13,6 +13,10 @@ final static String ARDUINO2 = "/dev/cu.usbmodem1411";
 final static int MODE_DEBUG = 1029;
 final static int MODE_PRODUCT = 1028;
 
+final static int MAX_SOSHAKU_NUM = 20;
+final static float MIN_SOSHAKU_VOLUME = 0.4;
+final static float MAX_SOSHAKU_VOLUME = 1.0;
+
 final static int NON = 0;
 final static int SENBEI = 1;
 final static int NIKU = 2;
@@ -95,7 +99,7 @@ void draw()
 
 void draw_debug()
 {
-  updateSensor();
+  //updateSensor();
 }
 
 void draw_product()
@@ -188,7 +192,6 @@ void pakuri()
 
 void init_product()
 {
-  arduino = new Arduino(this, ARDUINO1);
   arduino2 = new Arduino(this, ARDUINO2);
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
@@ -205,8 +208,8 @@ void init_product()
 
 void init_debug()
 {
-  if(arduino == null)arduino = new Arduino(this, ARDUINO1);
-  if(arduino2 == null)arduino2 = new Arduino(this,ARDUINO2);
+  //if(arduino == null)arduino = new Arduino(this, ARDUINO1);
+  //if(arduino2 == null)arduino2 = new Arduino(this,ARDUINO2);
   
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
