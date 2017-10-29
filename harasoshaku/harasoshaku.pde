@@ -5,16 +5,18 @@ import cc.arduino.*;
 import org.firmata.*;
 import processing.serial.*;
 
-final static int OSC_PORT = 9400;
+final static int OSC_PORT = 9600;
 final static String ARDUINO1 = "/dev/cu.usbserial-A1065T1O";
 final static String ARDUINO2 = "/dev/cu.usbmodem1411";
+
+final static int MIN_SOSHAKU_NUM = 5;
 
 
 final static int MODE_DEBUG = 1029;
 final static int MODE_PRODUCT = 1028;
 
 final static int MAX_SOSHAKU_NUM = 20;
-final static float MIN_SOSHAKU_VOLUME = 0.4;
+final static float MIN_SOSHAKU_VOLUME = 0.1;
 final static float MAX_SOSHAKU_VOLUME = 1.0;
 
 final static int NON = 0;
@@ -28,8 +30,8 @@ final static int POS_RIGHT = 2;
 final static int POS_LEFT = 3;
 final static int POS_BACK = 4;
 
-final int SENSOR_VALUE_NIKU = 937;
-final int SENSOR_VALUE_PACHIPACHI = 970;
+final int SENSOR_VALUE_NIKU = 1000;
+final int SENSOR_VALUE_PACHIPACHI = 1000;
 final int SENSOR_VALUE_SENBEI = 835;
 final int SENSOR_VALUE_PLATE_OFFSET = 150;
 
@@ -99,7 +101,7 @@ void draw()
 
 void draw_debug()
 {
-  //updateSensor();
+  updateSensor();
 }
 
 void draw_product()
@@ -114,7 +116,7 @@ void draw_product()
 
 void draw_display()
 { 
-  
+
   background(0);
   fill(255);
   text("dish_senbei = "+dish_senbei+"\ndish_niku = "+dish_niku+"\ndish_pachipachi = "+dish_pachipachi, 10, 10);
@@ -125,10 +127,9 @@ void draw_display()
   if (mode == MODE_DEBUG)text("mode = debug", 10, 105);
   else if (mode == MODE_PRODUCT)text("mode = product", 10, 105);
   else text("mode = null", 10, 105);
-  if(cTabemono != null)text("cTabemono = "+cTabemono.getCount(),10,120);
-  text("x = "+x+" y = "+y+" z = "+z,10,135);
-  if(table != null)text("table = "+table.size(),10,150);
-  
+  if (cTabemono != null)text("cTabemono = "+cTabemono.getCount(), 10, 120);
+  text("x = "+x+" y = "+y+" z = "+z, 10, 135);
+  if (table != null)text("table = "+table.size(), 10, 150);
 }
 
 void updateSensor()
@@ -164,14 +165,14 @@ boolean isEating()
 {
   if (cTabemono == null && arduino.analogRead(EATSENSOR) > SENSOR_VALUE_ISEATING)
   {
-    pakuri();
     for (Edible tabemono : table)
     {
       cTabemono = tabemono.isOntheTable(arduino2) ? null : tabemono;
-      if(cTabemono != null)break;
+      if (cTabemono != null)break;
     }
     if (cTabemono != null)
     {
+      pakuri();
       cTabemono.startEating();
       table.remove(cTabemono);
       return true;
@@ -185,13 +186,14 @@ boolean isEating()
 
 void pakuri()
 {
-  hard.playSounds("/paku", 1, POS_FORWARD,99);
+  hard.playSounds("/paku", 1, POS_FORWARD, 99);
   hard.forward(255, 300);
   hard.off(10);
 }
 
 void init_product()
 {
+  arduino = new Arduino(this, ARDUINO1);
   arduino2 = new Arduino(this, ARDUINO2);
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
@@ -208,9 +210,9 @@ void init_product()
 
 void init_debug()
 {
-  //if(arduino == null)arduino = new Arduino(this, ARDUINO1);
-  //if(arduino2 == null)arduino2 = new Arduino(this,ARDUINO2);
-  
+  if (arduino == null)arduino = new Arduino(this, ARDUINO1);
+  if (arduino2 == null)arduino2 = new Arduino(this, ARDUINO2);
+
   osc = new OscP5(this, 1234);
   myRemoteLocation = new NetAddress("127.0.0.1", OSC_PORT);
   hard = new HardwareController(arduino, osc, myRemoteLocation);
@@ -226,10 +228,37 @@ void init_debug()
 
 void keyPressed()
 {
+  if (key == 'R')
+  {
+    table = new ArrayList<Edible>();
+    senbei = new Senbei(hard);
+    niku = new Niku(hard);
+    pachipachi = new Pachipachi(hard);
+    cTabemono = null;
+    table.add(senbei);
+    table.add(niku);
+    table.add(pachipachi);
+    println("init");
+  }
+  if (key == e)
+  {
+    for (Edible tabemono : table)
+    {
+      cTabemono = tabemono.isOntheTable(arduino2) ? null : tabemono;
+      if (cTabemono != null)break;
+    }
+    if (cTabemono != null)
+    {
+      pakuri();
+      cTabemono.startEating();
+      table.remove(cTabemono);
+    }
+  }
   if (key == 'C')
   {
     normal_x = arduino.analogRead(X);
     normal_z = arduino.analogRead(Z);
+    println("cal x="+normal_x+" y="+normal_z);
   }
   if (key == 'n')
   {

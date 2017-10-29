@@ -15,6 +15,7 @@ class Pachipachi extends Edible
       if (pos == POS_NORMAL)return;
       if (pos == POS_BACK)
       {
+        if(count < MIN_SOSHAKU_NUM)return;
         gokuri();
         hard.playSounds(SOUND_PACHIPACHI_FINISH,1,0,count);
         swallow();

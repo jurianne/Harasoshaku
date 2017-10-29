@@ -14,11 +14,11 @@ abstract class Edible
   }
   void gokuri()
   {
-    hard.forward(255, 400);
     hard.playSounds("/gokuri", 1, POS_FORWARD,count);
-    isSwallow = true;
+    hard.forward(255, 400);
     hard.back(255, 400);
     hard.off(10);
+    isSwallow = true;
     count = 0;
   }
   int getCount(){return count;}

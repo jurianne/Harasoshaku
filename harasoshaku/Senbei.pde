@@ -14,6 +14,7 @@ class Senbei extends Edible
       if (pos == POS_NORMAL)return;
       if (pos == POS_BACK)
       {
+        if(count < MIN_SOSHAKU_NUM)return;
         gokuri();
         swallow();
       } else {

@@ -1,18 +1,38 @@
+#define AIN1 11
+#define AIN2 10
+#define PWMA 9
+
 void setup() {
-  // put your setup code here, to run once:
-  Serial.begin(9600);
-  pinMode(5,INPUT);
-  pinMode(6,INPUT);
-  pinMode(7,INPUT);
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  pinMode(PWMA, OUTPUT);
+
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.print(analogRead(5));
-  Serial.print(",");
-  Serial.print(analogRead(6));
-  Serial.print(",");
-  Serial.print(analogRead(7));
-  Serial.println();
-  
+  int i = 0;
+  //モーター停止
+  digitalWrite(AIN1, LOW);
+  digitalWrite(AIN2, LOW);
+  delay(3000);
+
+  //モーター正回転・スピード変化
+  digitalWrite(AIN1, HIGH);
+  digitalWrite(AIN2, LOW);
+  analogWrite(PWMA, 255);
+  delay(5000);
+
+
+  //モーター停止
+  digitalWrite(AIN1, LOW);
+  digitalWrite(AIN2, LOW);
+  delay(3000);
+
+  //モーター逆回転・スピード変化
+  digitalWrite(AIN1, LOW);
+  digitalWrite(AIN2, HIGH);
+  analogWrite(PWMA, 255);
+  delay(5000);
+
+
 }
